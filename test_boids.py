@@ -1,4 +1,4 @@
-from boids import update_boids
+import boids as fl
 from nose.tools import assert_almost_equal
 import os
 import yaml
@@ -10,9 +10,12 @@ def test_bad_boids_regression():
 
     positions  = np.append([np.asarray(boid_data[0])], [np.asarray(boid_data[1])], axis=0)
     velocities = np.append([np.asarray(boid_data[2])], [np.asarray(boid_data[3])], axis=0)
-
-    update_boids(positions, velocities)
-    boid_data_after = np.append(positions, velocities, axis=0) # boid data after update
+    
+    boids = fl.Flock("config.yaml")
+    boids.set_positions(positions)
+    boids.set_velocities(velocities)
+    boids.update_boids()
+    boid_data_after = np.append(boids.positions, boids.velocities, axis=0) # boid data after update
     
     for after,before in zip(regression_data["after"], boid_data_after):
         for after_value,before_value in zip(after, before): 

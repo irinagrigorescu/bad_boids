@@ -31,10 +31,9 @@ def new_flock(lower_limits_pos, upper_limits_pos):
 
 # Fly towards the middle function
 def fly_towards_the_middle(positions, velocities):
-	for i in range(NO_BOIDS):
-		for j in range(NO_BOIDS):
-			separation = positions[:, j] - positions[:, i]
-			velocities[:, i] = velocities[:, i] + separation * ATTENUATION_FACTOR
+	flock_middle = np.mean(positions, 1)
+	direction_to_flock_middle = positions - flock_middle[:, np.newaxis]
+	velocities -= direction_to_flock_middle * MOVEMENT_STRENGTH
 
 # Fly away from nearby boids function
 def fly_away_from_neaby_boids(positions, velocities):

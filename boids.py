@@ -8,25 +8,12 @@ from matplotlib import animation
 import random
 import numpy as np
 import sys
-
-# Global Parameters
-NO_BOIDS = 50
-MOVEMENT_STRENGTH = 0.01
-ALERT_DISTANCE = 100
-FORMATION_FLYING_DISTANCE = 10000
-FORMATION_FLYING_STRENGTH = 0.125
-ATTENUATION_FACTOR = MOVEMENT_STRENGTH/NO_BOIDS
-
-# Limits:
-lower_limits_pos = np.array([-450.0, 300.0])
-upper_limits_pos = np.array([  50.0, 600.0])
-lower_limits_vel = np.array([   0.0, -20.0])
-upper_limits_vel = np.array([  10.0,  20.0])
+import yaml
 
 # Initialise flock positions and velocities 
 def new_flock(lower_limits_pos, upper_limits_pos):
 	width = upper_limits_pos - lower_limits_pos
-	return (lower_limits_pos[:, np.newaxis] + np.random.rand(2, NO_BOIDS) * width[:, np.newaxis])
+	return (lower_limits_pos[:, np.newaxis] + np.random.rand(2, config['NO_BOIDS']) * width[:, np.newaxis])
 	
 
 # Fly towards the middle function
@@ -34,7 +21,7 @@ def fly_towards_the_middle(positions, velocities):
 	flock_middle = np.mean(positions, 1)
 	direction_to_flock_middle = positions - flock_middle[:, np.newaxis]
 	# Update velocities
-	velocities -= direction_to_flock_middle * MOVEMENT_STRENGTH
+	velocities -= direction_to_flock_middle * config['MOVEMENT_STRENGTH']
 
 # Fly away from nearby boids function
 def fly_away_from_nearby_boids(positions, velocities):
@@ -44,7 +31,7 @@ def fly_away_from_nearby_boids(positions, velocities):
 	square_distances_all = np.sum(squared_displacement_all, 0)
 	# Don't update if too far
 	separations_far = np.copy(separation_all)
-	far_index = (square_distances_all > ALERT_DISTANCE)
+	far_index = (square_distances_all > config['ALERT_DISTANCE'])
 	separations_far[0,:,:][far_index] = 0
 	separations_far[1,:,:][far_index] = 0
 	# Update velocities
@@ -60,16 +47,16 @@ def match_speed_with_nearby_boids(positions, velocities):
 	square_distances_all = np.sum(squared_displacement_all, 0)
 	# Match speed only with the closest ones
 	velocities_far = np.copy(velocities_dif_all)
-	far_index = (square_distances_all > FORMATION_FLYING_DISTANCE)
+	far_index = (square_distances_all > config['FORMATION_FLYING_DISTANCE'])
 	velocities_far[0,:,:][far_index] = 0
 	velocities_far[1,:,:][far_index] = 0	
 	# Update velocities
-	velocities -= np.mean(velocities_far, 1) * FORMATION_FLYING_STRENGTH
+	velocities -= np.mean(velocities_far, 1) * config['FORMATION_FLYING_STRENGTH']
 	
 	
 # Move according to velocities
 def move_according_to_velocities(positions, velocities):
-	for i in range(NO_BOIDS):
+	for i in range(config['NO_BOIDS']):
 		positions[:, i] += velocities[:, i]
 	
 # Update boids function
@@ -88,15 +75,21 @@ def update_boids(positions, velocities):
 	move_according_to_velocities(positions, velocities)
 
 
+
 # Initialisations
+config = yaml.load(open("config.yaml"))
+lower_limits_pos = np.array(config['LOWER_LIM_POS'])
+upper_limits_pos = np.array(config['UPPER_LIM_POS'])
+lower_limits_vel = np.array(config['LOWER_LIM_VEL'])
+upper_limits_vel = np.array(config['UPPER_LIM_VEL'])
+
 positions  = new_flock(lower_limits_pos, upper_limits_pos)
 velocities = new_flock(lower_limits_vel, upper_limits_vel)
-#print positions
-#sys.exit(0)
 
-figure=plt.figure()
-axes=plt.axes(xlim=(-500,1500), ylim=(-500,1500))
-scatter=axes.scatter(positions[0,:], positions[1,:])
+# Plot figures
+figure = plt.figure()
+axes = plt.axes(xlim = (-500,1500), ylim = (-500,1500))
+scatter = axes.scatter(positions[0,:], positions[1,:])
 
 def animate(frame):
    update_boids(positions, velocities)

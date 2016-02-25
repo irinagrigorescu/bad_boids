@@ -24,36 +24,51 @@ boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
 # Fly towards the middle function
 def fly_towards_the_middle(boids):
-	xs,ys,xvs,yvs = boids
+	boid_pos_x,boid_pos_y,boid_vel_x,boid_vel_y = boids
 	for i in range(NO_BOIDS):
 		for j in range(NO_BOIDS):
-			xvs[i]=xvs[i]+(xs[j]-xs[i])*MOVEMENT_STRENGTH/NO_BOIDS
-			yvs[i]=yvs[i]+(ys[j]-ys[i])*MOVEMENT_STRENGTH/NO_BOIDS	
+			attenuation_factor = MOVEMENT_STRENGTH/NO_BOIDS
+			separation_x = boid_pos_x[j] - boid_pos_x[i]
+			separation_y = boid_pos_y[j] - boid_pos_y[i]
+			boid_vel_x[i] = boid_vel_x[i] + separation_x * attenuation_factor
+			boid_vel_y[i] = boid_vel_y[i] + separation_y * attenuation_factor
 
 # Fly away from nearby boids function
 def fly_away_from_neaby_boids(boids):
-	xs,ys,xvs,yvs = boids
+	boid_pos_x,boid_pos_y,boid_vel_x,boid_vel_y = boids
 	for i in range(NO_BOIDS):
 		for j in range(NO_BOIDS):
-			if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < ALERT_DISTANCE:
-				xvs[i]=xvs[i]+(xs[i]-xs[j])
-				yvs[i]=yvs[i]+(ys[i]-ys[j])	
+			separation_x = boid_pos_x[j] - boid_pos_x[i]
+			separation_y = boid_pos_y[j] - boid_pos_y[i]
+			squared_displacement_x = separation_x**2
+			squared_displacement_y = separation_y**2
+			square_distances = squared_displacement_x + squared_displacement_y
+			if square_distances < ALERT_DISTANCE:
+				boid_vel_x[i] = boid_vel_x[i] + separation_x
+				boid_vel_y[i] = boid_vel_y[i] + separation_y
 				
 # Match speed with nearby boids
 def match_speed_with_nearby_boids(boids):
-	xs,ys,xvs,yvs = boids
+	boid_pos_x,boid_pos_y,boid_vel_x,boid_vel_y = boids
 	for i in range(NO_BOIDS):
 		for j in range(NO_BOIDS):
-			if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < FORMATION_FLYING_DISTANCE:
-				xvs[i]=xvs[i]+(xvs[j]-xvs[i])*FORMATION_FLYING_STRENGTH/NO_BOIDS
-				yvs[i]=yvs[i]+(yvs[j]-yvs[i])*FORMATION_FLYING_STRENGTH/NO_BOIDS
+			separation_x = boid_pos_x[j] - boid_pos_x[i]
+			separation_y = boid_pos_y[j] - boid_pos_y[i]
+			squared_displacement_x = separation_x**2
+			squared_displacement_y = separation_y**2
+			velocity_difference_x = boid_vel_x[j]-boid_vel_x[i]
+			velocity_difference_y = boid_vel_y[j]-boid_vel_y[i]
+			square_distances = squared_displacement_x + squared_displacement_y
+			if square_distances < FORMATION_FLYING_DISTANCE:
+				boid_vel_x[i] = boid_vel_x[i] + velocity_difference_x * FORMATION_FLYING_STRENGTH/NO_BOIDS
+				boid_vel_y[i] = boid_vel_y[i] + velocity_difference_y * FORMATION_FLYING_STRENGTH/NO_BOIDS
 
 # Move according to velocities
 def move_according_to_velocities(boids):
-	xs,ys,xvs,yvs = boids
+	boid_pos_x,boid_pos_y,boid_vel_x,boid_vel_y = boids
 	for i in range(NO_BOIDS):
-		xs[i]=xs[i]+xvs[i]
-		ys[i]=ys[i]+yvs[i]
+		boid_pos_x[i] = boid_pos_x[i] + boid_vel_x[i]
+		boid_pos_y[i] = boid_pos_y[i] + boid_vel_y[i]
 	
 # Update boids function
 def update_boids(boids):

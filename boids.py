@@ -37,12 +37,12 @@ def fly_towards_the_middle(positions, velocities):
 	velocities -= direction_to_flock_middle * MOVEMENT_STRENGTH
 
 # Fly away from nearby boids function
-def fly_away_from_neaby_boids(positions, velocities):
+def fly_away_from_nearby_boids(positions, velocities):
 	# Compute distances between boids
 	separation_all = positions[:,np.newaxis,:] - positions[:,:,np.newaxis]
 	squared_displacement_all = np.power(separation_all, 2)
 	square_distances_all = np.sum(squared_displacement_all, 0)
-	# Don't update for too close
+	# Don't update if too far
 	separations_far = np.copy(separation_all)
 	far_index = (square_distances_all > ALERT_DISTANCE)
 	separations_far[0,:,:][far_index] = 0
@@ -53,19 +53,24 @@ def fly_away_from_neaby_boids(positions, velocities):
 				
 # Match speed with nearby boids
 def match_speed_with_nearby_boids(positions, velocities):
-	for i in range(NO_BOIDS):
-		for j in range(NO_BOIDS):
-			separation = positions[:,j] - positions[:,i]
-			squared_displacement = np.power(separation, 2)
-			velocity_difference = velocities[:, j] - velocities[:, i]
-			square_distances = np.sum(squared_displacement)
-			if square_distances < FORMATION_FLYING_DISTANCE:
-				velocities[:, i] = velocities[:, i] + velocity_difference * FORMATION_FLYING_STRENGTH/NO_BOIDS
-
+	# Compute difference between velocities
+	velocities_dif_all = velocities[:,np.newaxis,:] - velocities[:,:,np.newaxis]
+	separation_all = positions[:,np.newaxis,:] - positions[:,:,np.newaxis]
+	squared_displacement_all = np.power(separation_all, 2)
+	square_distances_all = np.sum(squared_displacement_all, 0)
+	# Match speed only with the closest ones
+	velocities_far = np.copy(velocities_dif_all)
+	far_index = (square_distances_all > FORMATION_FLYING_DISTANCE)
+	velocities_far[0,:,:][far_index] = 0
+	velocities_far[1,:,:][far_index] = 0	
+	# Update velocities
+	velocities -= np.mean(velocities_far, 1) * FORMATION_FLYING_STRENGTH
+	
+	
 # Move according to velocities
 def move_according_to_velocities(positions, velocities):
 	for i in range(NO_BOIDS):
-		positions[:, i] = positions[:, i] + velocities[:, i]
+		positions[:, i] += velocities[:, i]
 	
 # Update boids function
 def update_boids(positions, velocities):
@@ -74,7 +79,7 @@ def update_boids(positions, velocities):
 	fly_towards_the_middle(positions, velocities)
 	
 	# Fly away from nearby boids
-	fly_away_from_neaby_boids(positions, velocities)
+	fly_away_from_nearby_boids(positions, velocities)
 	
 	# Try to match speed with nearby boids
 	match_speed_with_nearby_boids(positions, velocities)

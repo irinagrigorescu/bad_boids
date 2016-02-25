@@ -33,17 +33,23 @@ def new_flock(lower_limits_pos, upper_limits_pos):
 def fly_towards_the_middle(positions, velocities):
 	flock_middle = np.mean(positions, 1)
 	direction_to_flock_middle = positions - flock_middle[:, np.newaxis]
+	# Update velocities
 	velocities -= direction_to_flock_middle * MOVEMENT_STRENGTH
 
 # Fly away from nearby boids function
 def fly_away_from_neaby_boids(positions, velocities):
-	for i in range(NO_BOIDS):
-		for j in range(NO_BOIDS):
-			separation = positions[:,j] - positions[:,i]
-			squared_displacement = np.power(separation, 2)
-			square_distances = np.sum(squared_displacement)
-			if square_distances < ALERT_DISTANCE:
-				velocities[:, i] = velocities[:, i] - separation
+	# Compute distances between boids
+	separation_all = positions[:,np.newaxis,:] - positions[:,:,np.newaxis]
+	squared_displacement_all = np.power(separation_all, 2)
+	square_distances_all = np.sum(squared_displacement_all, 0)
+	# Don't update for too close
+	separations_far = np.copy(separation_all)
+	far_index = (square_distances_all > ALERT_DISTANCE)
+	separations_far[0,:,:][far_index] = 0
+	separations_far[1,:,:][far_index] = 0
+	# Update velocities
+	velocities += np.sum(separations_far,1)
+	
 				
 # Match speed with nearby boids
 def match_speed_with_nearby_boids(positions, velocities):

@@ -23,12 +23,16 @@ def fly_towards_the_middle(positions, velocities):
 	# Update velocities
 	velocities -= direction_to_flock_middle * config['MOVEMENT_STRENGTH']
 
+def compute_square_distances(separation_all):
+	squared_displacement_all = np.power(separation_all, 2)
+	square_distances_all = np.sum(squared_displacement_all, 0)
+	return square_distances_all
+
 # Fly away from nearby boids function
 def fly_away_from_nearby_boids(positions, velocities):
 	# Compute distances between boids
 	separation_all = positions[:,np.newaxis,:] - positions[:,:,np.newaxis]
-	squared_displacement_all = np.power(separation_all, 2)
-	square_distances_all = np.sum(squared_displacement_all, 0)
+	square_distances_all = compute_square_distances(separation_all)
 	# Don't update if too far
 	separations_far = np.copy(separation_all)
 	far_index = (square_distances_all > config['ALERT_DISTANCE'])
@@ -43,8 +47,7 @@ def match_speed_with_nearby_boids(positions, velocities):
 	# Compute difference between velocities
 	velocities_dif_all = velocities[:,np.newaxis,:] - velocities[:,:,np.newaxis]
 	separation_all = positions[:,np.newaxis,:] - positions[:,:,np.newaxis]
-	squared_displacement_all = np.power(separation_all, 2)
-	square_distances_all = np.sum(squared_displacement_all, 0)
+	square_distances_all = compute_square_distances(separation_all)
 	# Match speed only with the closest ones
 	velocities_far = np.copy(velocities_dif_all)
 	far_index = (square_distances_all > config['FORMATION_FLYING_DISTANCE'])

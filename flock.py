@@ -2,13 +2,10 @@
 A deliberately bad implementation of [Boids](http://dl.acm.org/citation.cfm?doid=37401.37406)
 for use as an exercise on refactoring.
 """
-
-from matplotlib import pyplot as plt
-from matplotlib import animation
-import random
 import numpy as np
 import sys
 import yaml
+from matplotlib import animation
 
 class Flock(object):
 	def __init__(self, config_file):
@@ -85,10 +82,11 @@ class Flock(object):
 	# Setter for velocities
 	def set_velocities(self, new_velocities):
 		self.velocities = new_velocities
+		
 	
 
 
-
+'''
 # Create Object	
 boids = Flock("config.yaml")
 
@@ -106,3 +104,4 @@ anim = animation.FuncAnimation(figure, animate,
 
 if __name__ == "__main__":
     plt.show()
+'''

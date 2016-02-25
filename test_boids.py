@@ -1,4 +1,4 @@
-import boids as fl
+import flock as fl
 from nose.tools import assert_almost_equal
 import os
 import yaml

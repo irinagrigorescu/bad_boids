@@ -6,7 +6,8 @@ from flock import Flock
 
 # Command line entry point
 def process():
-    parser = ArgumentParser(description = "Simulate the motion of a flock of birds")
+    parser = ArgumentParser(description = \
+            "Simulate the motion of a flock of birds")
     
     # Parameters
     parser.add_argument('--file', '-f', dest = 'configFile')
@@ -18,9 +19,9 @@ def process():
 
     args = parser.parse_args()
 
-	# Catch exception if file does not exist
+    # Catch exception if file does not exist
     try:
-		# Create object
+        # Create object
         boids = Flock(args.configFile)
         # Plot figures
         figure = plt.figure()
@@ -36,11 +37,11 @@ def process():
         parser.print_help()
     except:
         print "Unexpected error.\n"
-		
+
 
 def animate(boids, scatter):
-	boids.update_boids()
-	scatter.set_offsets(boids.positions.transpose())
+    boids.update_boids()
+    scatter.set_offsets(boids.positions.transpose())
 
 if __name__ == "__main__":
     process()

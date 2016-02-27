@@ -80,22 +80,3 @@ class Flock(object):
         self.velocities = new_velocities
 
 
-'''
-# Create Object    
-boids = Flock("config.yaml")
-
-# Plot figures
-figure = plt.figure()
-axes = plt.axes(xlim = (-500,1500), ylim = (-500,1500))
-scatter = axes.scatter(boids.positions[0,:], boids.positions[1,:])
-
-def animate(frame):
-   boids.update_boids()
-   scatter.set_offsets(boids.positions.transpose())
-
-anim = animation.FuncAnimation(figure, animate,
-                               frames=50, interval=50)
-
-if __name__ == "__main__":
-    plt.show()
-'''

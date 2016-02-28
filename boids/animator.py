@@ -16,7 +16,8 @@ class FlockAnimator(object):
         plt.xlabel("x")
         plt.ylabel("y")
         plt.title(self.title)
-        scatter = axes.scatter(self.boids.positions[0,:], self.boids.positions[1,:])
+        positions = self.boids.get_positions()
+        scatter = axes.scatter(positions[0,:], positions[1,:])
         # Function handle for animate
         funcEval = lambda x: self.__animate(scatter)
         # Animate 
@@ -25,6 +26,6 @@ class FlockAnimator(object):
 
     def __animate(self, scatter):
         self.boids.update_boids()
-        scatter.set_offsets(self.boids.positions.transpose())
+        scatter.set_offsets(self.boids.get_positions().transpose())
 
 

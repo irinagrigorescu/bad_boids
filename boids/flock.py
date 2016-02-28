@@ -12,20 +12,20 @@ class Flock(object):
         lower_limits_vel = np.array(self.config['LOWER_LIM_VEL'])
         upper_limits_vel = np.array(self.config['UPPER_LIM_VEL'])
         # Positions and velocities
-        self.positions  = self.generate_initial_positions(lower_limits_pos, upper_limits_pos)
-        self.velocities = self.generate_initial_positions(lower_limits_vel, upper_limits_vel)
+        self._positions  = self.generate_initial_positions(lower_limits_pos, upper_limits_pos)
+        self._velocities = self.generate_initial_positions(lower_limits_vel, upper_limits_vel)
     
     # Fly towards the middle method
     def fly_towards_the_middle(self):
-        flock_middle = np.mean(self.positions, 1)
-        direction_to_flock_middle = self.positions - flock_middle[:, np.newaxis]
+        flock_middle = np.mean(self._positions, 1)
+        direction_to_flock_middle = self._positions - flock_middle[:, np.newaxis]
         # Update velocities
-        self.velocities -= direction_to_flock_middle * self.config['MOVEMENT_STRENGTH']
+        self._velocities -= direction_to_flock_middle * self.config['MOVEMENT_STRENGTH']
     
     # Fly away from nearby boids method
     def fly_away_from_nearby_boids(self):
         # Compute distances between boids
-        separation_all = self.positions[:,np.newaxis,:] - self.positions[:,:,np.newaxis]
+        separation_all = self._positions[:,np.newaxis,:] - self._positions[:,:,np.newaxis]
         square_distances_all = self.compute_square_distances(separation_all)
         # Don't update if too far
         separations_far = np.copy(separation_all)
@@ -33,13 +33,13 @@ class Flock(object):
         separations_far[0,:,:][far_index] = 0
         separations_far[1,:,:][far_index] = 0
         # Update velocities
-        self.velocities += np.sum(separations_far,1)
+        self._velocities += np.sum(separations_far,1)
     
     # Match speed with nearby boids
     def match_speed_with_nearby_boids(self):
         # Compute difference between velocities
-        velocities_dif_all = self.velocities[:,np.newaxis,:] - self.velocities[:,:,np.newaxis]
-        separation_all = self.positions[:,np.newaxis,:] - self.positions[:,:,np.newaxis]
+        velocities_dif_all = self._velocities[:,np.newaxis,:] - self._velocities[:,:,np.newaxis]
+        separation_all = self._positions[:,np.newaxis,:] - self._positions[:,:,np.newaxis]
         square_distances_all = self.compute_square_distances(separation_all)
         # Match speed only with the closest ones
         velocities_far = np.copy(velocities_dif_all)
@@ -47,11 +47,11 @@ class Flock(object):
         velocities_far[0,:,:][far_index] = 0
         velocities_far[1,:,:][far_index] = 0    
         # Update velocities
-        self.velocities -= np.mean(velocities_far, 1) * self.config['FORMATION_FLYING_STRENGTH']
+        self._velocities -= np.mean(velocities_far, 1) * self.config['FORMATION_FLYING_STRENGTH']
     
     # Move according to velocities
     def move_according_to_velocities(self):
-        self.positions += self.velocities
+        self._positions += self._velocities
     
     # Update boids method
     def update_boids(self):
@@ -73,10 +73,18 @@ class Flock(object):
     
     # Setter for positions
     def set_positions(self, new_positions):
-        self.positions = new_positions
+        self._positions = new_positions
     
     # Setter for velocities
     def set_velocities(self, new_velocities):
-        self.velocities = new_velocities
+        self._velocities = new_velocities
+
+    # Getter for positions
+    def get_positions(self):
+        return self._positions
+
+    # Getter for velocities
+    def get_velocities(self):
+        return self._velocities
 
 

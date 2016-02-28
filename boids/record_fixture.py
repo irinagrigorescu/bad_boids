@@ -8,15 +8,15 @@ import flock as fl
 def record_fixture_fly_towards_the_middle(config_file, fixture_file):
     # Initial positions
     boids = fl.Flock(config_file)
-    positions  = boids.positions.tolist()
-    velocities = boids.velocities.tolist()
+    positions  = boids.get_positions().tolist()
+    velocities = boids.get_velocities().tolist()
 
     # Call method
     boids.fly_towards_the_middle()
 
     # Updated positions
-    positions_after = boids.positions.tolist()
-    velocities_after = boids.velocities.tolist()
+    positions_after = boids.get_positions().tolist()
+    velocities_after = boids.get_velocities().tolist()
     
     positions.extend(velocities)
     positions_after.extend(velocities_after)
@@ -30,15 +30,15 @@ def record_fixture_fly_towards_the_middle(config_file, fixture_file):
 def record_fixture_fly_away_from_nearby_boids(config_file, fixture_file):
     # Initial positions
     boids = fl.Flock(config_file)
-    positions  = boids.positions.tolist()
-    velocities = boids.velocities.tolist()
+    positions  = boids.get_positions().tolist()
+    velocities = boids.get_velocities().tolist()
 
     # Call method
     boids.fly_away_from_nearby_boids()
 
     # Updated positions
-    positions_after = boids.positions.tolist()
-    velocities_after = boids.velocities.tolist()
+    positions_after = boids.get_positions().tolist()
+    velocities_after = boids.get_velocities().tolist()
     
     positions.extend(velocities)
     positions_after.extend(velocities_after)
@@ -52,15 +52,15 @@ def record_fixture_fly_away_from_nearby_boids(config_file, fixture_file):
 def record_fixture_match_speed_with_nearby_boids(config_file, fixture_file):
     # Initial positions
     boids = fl.Flock(config_file)
-    positions  = boids.positions.tolist()
-    velocities = boids.velocities.tolist()
+    positions  = boids.get_positions().tolist()
+    velocities = boids.get_velocities().tolist()
 
     # Call method
     boids.match_speed_with_nearby_boids()
 
     # Updated positions
-    positions_after = boids.positions.tolist()
-    velocities_after = boids.velocities.tolist()
+    positions_after = boids.get_positions().tolist()
+    velocities_after = boids.get_velocities().tolist()
     
     positions.extend(velocities)
     positions_after.extend(velocities_after)
@@ -74,15 +74,15 @@ def record_fixture_match_speed_with_nearby_boids(config_file, fixture_file):
 def record_fixture_move_according_to_velocities(config_file, fixture_file):
     # Initial positions
     boids = fl.Flock(config_file)
-    positions  = boids.positions.tolist()
-    velocities = boids.velocities.tolist()
+    positions  = boids.get_positions().tolist()
+    velocities = boids.get_velocities().tolist()
 
     # Call method
     boids.move_according_to_velocities()
 
     # Updated positions
-    positions_after = boids.positions.tolist()
-    velocities_after = boids.velocities.tolist()
+    positions_after = boids.get_positions().tolist()
+    velocities_after = boids.get_velocities().tolist()
     
     positions.extend(velocities)
     positions_after.extend(velocities_after)
@@ -96,15 +96,15 @@ def record_fixture_move_according_to_velocities(config_file, fixture_file):
 def record_fixture_update_boids(config_file, fixture_file):
     # Initial positions
     boids = fl.Flock(config_file)
-    positions  = boids.positions.tolist()
-    velocities = boids.velocities.tolist()
+    positions  = boids.get_positions().tolist()
+    velocities = boids.get_velocities().tolist()
 
     # Call method
     boids.update_boids()
 
     # Updated positions
-    positions_after = boids.positions.tolist()
-    velocities_after = boids.velocities.tolist()
+    positions_after = boids.get_positions().tolist()
+    velocities_after = boids.get_velocities().tolist()
     
     positions.extend(velocities)
     positions_after.extend(velocities_after)

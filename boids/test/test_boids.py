@@ -19,7 +19,7 @@ def test_fly_towards_the_middle():
     # Call method
     boids.fly_towards_the_middle()
     # Boid data after update
-    boid_data_after = np.append(boids.positions, boids.velocities, axis=0) 
+    boid_data_after = np.append(boids.get_positions(), boids.get_velocities(), axis=0) 
     
     for after,before in zip(regression_data["after"], boid_data_after):
         for after_value,before_value in zip(after, before): 
@@ -40,7 +40,7 @@ def test_fly_away_from_nearby_boids():
     # Call method
     boids.fly_away_from_nearby_boids()
     # Boid data after update
-    boid_data_after = np.append(boids.positions, boids.velocities, axis=0) 
+    boid_data_after = np.append(boids.get_positions(), boids.get_velocities(), axis=0) 
     
     for after,before in zip(regression_data["after"], boid_data_after):
         for after_value,before_value in zip(after, before): 
@@ -61,7 +61,7 @@ def test_match_speed_with_nearby_boids():
     # Call method
     boids.match_speed_with_nearby_boids()
     # Boid data after update
-    boid_data_after = np.append(boids.positions, boids.velocities, axis=0) 
+    boid_data_after = np.append(boids.get_positions(), boids.get_velocities(), axis=0) 
     
     for after,before in zip(regression_data["after"], boid_data_after):
         for after_value,before_value in zip(after, before): 
@@ -82,7 +82,7 @@ def test_move_according_to_velocities():
     # Call method
     boids.move_according_to_velocities()
     # Boid data after update
-    boid_data_after = np.append(boids.positions, boids.velocities, axis=0)
+    boid_data_after = np.append(boids.get_positions(), boids.get_velocities(), axis=0)
 
     for after,before in zip(regression_data["after"], boid_data_after):
         for after_value,before_value in zip(after, before):
@@ -104,7 +104,7 @@ def test_update_boids():
     # Call method
     boids.update_boids()
     # Boid data after update
-    boid_data_after = np.append(boids.positions, boids.velocities, axis=0)
+    boid_data_after = np.append(boids.get_positions(), boids.get_velocities(), axis=0)
 
     for after,before in zip(regression_data["after"], boid_data_after):
         for after_value,before_value in zip(after, before):
@@ -131,7 +131,7 @@ def test_set_positions():
     # Call method
     boids.set_positions(initial)
     
-    for pos_initial, pos_after in zip(initial, boids.positions):
+    for pos_initial, pos_after in zip(initial, boids.get_positions()):
         for initial, after in zip(pos_initial, pos_after):
             for initial_val, after_val in zip(initial, after):
                 assert_equal(initial_val, after_val)
@@ -145,7 +145,7 @@ def test_set_velocities():
     # Call method
     boids.set_velocities(initial)
     
-    for vel_initial, vel_after in zip(initial, boids.velocities):
+    for vel_initial, vel_after in zip(initial, boids.get_velocities()):
         for initial, after in zip(vel_initial, vel_after):
             for initial_val, after_val in zip(initial, after):
                 assert_equal(initial_val, after_val)

@@ -3,6 +3,7 @@ from argparse import ArgumentParser
 from matplotlib import animation
 from matplotlib import pyplot as plt
 from flock import Flock
+from animator import FlockAnimator
 
 # Command line entry point
 def process():
@@ -24,24 +25,15 @@ def process():
         # Create object
         boids = Flock(args.configFile)
         # Plot figures
-        figure = plt.figure()
-        axes = plt.axes(xlim = (-500,1500), ylim = (-500,1500))
-        scatter = axes.scatter(boids.positions[0,:], boids.positions[1,:])
-        # Function handle for animate
-        funcEval = lambda x: animate(boids, scatter)
-        # Animate
-        anim = animation.FuncAnimation(figure, funcEval, frames=50, interval=50)
-        plt.show()
+        animator = FlockAnimator((-500,1500), (-500,1500), "The Boids!", boids)
+        animator.animate_flock()
     except IOError:
         print "The file you provided does not exist.\n" 
         parser.print_help()
     except:
-        print "Unexpected error.\n"
+        print "Unexpected error.", sys.exc_info()[0], "\n"
+        raise
 
-
-def animate(boids, scatter):
-    boids.update_boids()
-    scatter.set_offsets(boids.positions.transpose())
 
 if __name__ == "__main__":
     process()
